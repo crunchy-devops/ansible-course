@@ -1,0 +1,16 @@
+---
+- hosts: centos_remote_a
+  become: true
+  become_user: root
+  tasks:
+  - name: get a token and move it to target 2
+    command: openssl genrsa -out /home/centos/Dev.key 2048
+    delegate_to: target2
+  - name: synchronize a directory from server A to server B
+    become: true
+    become_user: root
+    synchronize:
+      src: /tmp/*
+      dest: /tmp
+      mode: pull
+    delegate_to: target2

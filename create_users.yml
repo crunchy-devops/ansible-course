@@ -1,0 +1,14 @@
+---
+- hosts: ubuntuvm
+  become: true
+  gather_facts: no
+  vars:
+    password: '12345678'
+  tasks:
+    - name: Creating user titi with admin access
+      user:
+        name: titi
+        password: "{{ password | password_hash('sha512') }}"
+        groups: www-data,sudo
+        state: present
+

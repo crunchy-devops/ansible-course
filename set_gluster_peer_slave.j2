@@ -1,0 +1,8 @@
+{% set sheban = '#!/usr/bin/sh' %}
+{{ sheban }}
+{% set peer = ' /usr/local/sbin/gluster peer probe ' %}
+{% set arr1 = [] %}
+{% for host in groups['slave'] %}
+{{ peer }} {{ host }}
+{% endfor %}
+

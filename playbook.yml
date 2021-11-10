@@ -1,0 +1,6 @@
+---
+- name: use a dedicated Ansible module
+  hosts: localhost
+  become: true
+  roles:
+    - { role: role.docker }

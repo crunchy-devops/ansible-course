@@ -1,0 +1,26 @@
+---
+- hosts: target2
+  become: true
+  gather_facts: no
+  tasks:
+    - name: install git
+      yum:  name=git state=latest
+    - name: get gluster repo
+      git:
+        repo: 'https://github.com/gluster/glusterfs.git'
+        dest: /home/{{ ansible_ssh_user }}/glusterfs
+    - name: get list of tags
+      shell: git describe --tags `git rev-list --tags --max-count=10`
+      args:
+        chdir: /home/{{ ansible_ssh_user }}/glusterfs
+        executable: /bin/bash
+      register: results
+    - name: latest version
+      debug:
+        msg: "{{ results.stdout | latest_version }}"
+    - name:
+      git:
+        repo: 'https://github.com/gluster/glusterfs.git'
+        dest: /home/{{ ansible_ssh_user }}/glusterfs
+        version: "{{ results.stdout | latest_version }}"
+

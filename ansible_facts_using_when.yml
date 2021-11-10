@@ -1,0 +1,9 @@
+---
+- name: obtenir des informations sur la memoire Setup
+  hosts: all
+  tasks:
+    - debug: var=ansible_memory_mb
+    - debug: msg="total RAM is {{ ansible_memory_mb.real.total }}"
+    - fail: msg="not enough RAM"
+      when: ansible_memory_mb.real.total < 2048
+

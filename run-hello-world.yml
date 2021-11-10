@@ -1,0 +1,20 @@
+---
+- name: Install Jenkins CI/CD
+  hosts: centos_remote_a
+  tasks:
+    - name: Docker test exists
+      shell: docker ps --all --quiet --filter=name="hello-world-test"
+      register: conference_id
+    - name: Delete container if exist
+      shell: docker rm -f hello-world-test
+      when: conference_id.stdout != ""
+    - name: Docker image exists
+      shell:  docker images | grep 'hello-world-afip'
+      register: image
+      ignore_errors: yes
+    - name: Delete image if exist
+      shell:  docker rmi -f  $(docker images |grep 'hello-world-afip')
+      when: image.stdout != ""
+      ignore_errors: yes
+    - name: Start test container
+      shell: docker run -d --name hello-world-test -p 10100:8080 systemdevformations/hello-world-afip

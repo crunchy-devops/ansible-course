@@ -1,0 +1,48 @@
+---
+# resolved : https://bugzilla.redhat.com/show_bug.cgi?id=1539142
+#
+- hosts: all,!local
+  become: true
+  vars:
+    myuser: justin
+  tasks:
+    - name: add user justin
+      user:
+        name: "{{ myuser }}"
+        shell: /bin/bash
+        password: "{{ '12345678' | password_hash('sha512') }}"
+        groups: adm
+        append: yes
+    - name: Create a directory for ssh
+      file:
+        path: "/home/{{ myuser }}/.ssh"
+        owner: "{{ myuser}}"
+        group: "{{ myuser}}"
+        state: directory
+        mode: '0700'
+    - name: create a file know_authorized
+      file:
+        path: "/home/{{ myuser }}/.ssh/authorized_keys"
+        owner: "{{ myuser}}"
+        group: "{{ myuser}}"
+        state: touch
+        mode: '0600'
+- hosts: slave
+  become: true
+  vars:
+    myuser: justin
+  tasks:
+    - name: create ssh key on admin user {{ myuser }}
+      delegate_to: target2
+      openssh_keypair:
+        path: "/home/{{myuser}}/.ssh/id_rsa"
+        owner: "{{ myuser }}"
+        group: "{{ myuser }}"
+      register: ssh_key
+    - name: add public key
+      lineinfile:
+        path: "/home/{{ myuser }}/.ssh/authorized_keys"
+        state: present
+        line: "{{ssh_key['public_key'] }}"
+
+

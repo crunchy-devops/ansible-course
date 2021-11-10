@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+  vars:
+    user_data: "{{ lookup('file', '/etc/motd') }}"
+  tasks:
+    - name: cat file
+      command: cat /etc/motd
+      register: result
+    - name: lookup works only on local file.
+      debug:
+        msg: "{{ user_data | upper }}"
+    - name: Lower Message
+      debug:
+        msg: "{{ result.stdout | lower }}"
+    - name: Funny message
+      debug:
+        msg: "{{ result.stdout | a_filter}}"

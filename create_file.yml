@@ -1,0 +1,12 @@
+---
+- hosts: centos
+  tasks:
+    - name: create file
+      file: state=touch path=/home/{{ansible_ssh_user}}/hostname.conf
+      ansible_ssh_user:
+    - name:  if line not there
+      lineinfile: state=present
+                  dest=/home/{{ansible_ssh_user}}/hostname.conf
+                  line="Hostname={{ansible_hostname}}"
+ 
+

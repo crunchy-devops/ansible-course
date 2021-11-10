@@ -1,0 +1,10 @@
+{% set sheban = '#!/usr/bin/sh' %}
+{% set volume = ' /usr/local/sbin/gluster volume create gv0 disperse ' %}
+{% set vol2 = volume ~  groups['all'] | length ~ " " %}
+{% set arr1 = [] %}
+{% for host in groups['all'] -%}
+{% set vol = host ~ ":" ~ '/data/brick1/gv0 ' %}
+{{ arr1.append(vol) }}
+{%- endfor %}
+{{ sheban }}
+{{ vol2}} {{arr1|join(" ") }} force

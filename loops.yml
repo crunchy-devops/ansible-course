@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+  - name:  loop example
+    file: 
+      state:  touch 
+      path:  "/home/{{ansible_ssh_user}}/{{ item }}"
+    with_list:
+      - ab
+      - cd
+      - ef
+
+

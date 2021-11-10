@@ -1,0 +1,18 @@
+---
+- name: Create MOTD file
+  hosts: all
+  become: true
+  vars:
+      text_message: " {{hostvars['target1']['ansible_host']}}"
+      my_name: "Herve"
+  tasks:
+    - name: copy template file
+      template:
+        src: motd.j2
+        dest: /etc/motd
+  tags:
+    - motd_config
+
+
+
+

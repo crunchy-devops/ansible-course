@@ -1,0 +1,13 @@
+---
+- name: obtenir des informations sur la memoire par les facts (setup)
+  hosts: all
+  tasks:
+    - debug: var=ansible_memory_mb
+    - debug: msg="total RAM is {{ ansible_memory_mb.real.total }}"
+    - assert:
+        that:
+         - ansible_memory_mb.real.total >= 2048
+        fail_msg: "'ansible_memory_mb.real.total' is too low"
+        success_msg: "'ansible_memory_mb.real.total' is ok"
+
+

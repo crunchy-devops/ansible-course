@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  gather_facts: on
+  gather_subset:
+    - network
+    - virtual
+  tasks:
+    - name: install git on centos
+      yum: name=git  state=latest
+      when: ansible_distribution == "CentOS"
+    - name: install git on alpine
+      apk: name=git  state=latest
+      when: ansible_distribution == "Alpine"
+    - name: install git on ubuntu
+      apt: name=git state=latest update_cache=yes
+      when: ansible_distribution == "Ubuntu"

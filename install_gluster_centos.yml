@@ -1,0 +1,171 @@
+---
+# resolved : https://bugzilla.redhat.com/show_bug.cgi?id=1539142
+#
+- hosts: all
+  become: true
+  roles:
+    - role.ntp
+    - role.docker
+  tasks:
+    - name:  update cache
+      yum: update_cache=yes
+    - name:  add epel release
+      yum:
+        name: epel-release
+        state: latest
+    - name: install all packages
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - git
+          - autoconf
+          - automake
+          - bison
+          - cmockery2-devel
+          - dos2unix
+          - flex
+          - fuse-devel
+          - glib2-devel
+          - libacl-devel
+          - libaio-devel
+          - libattr-devel
+          - libcurl-devel
+          - libibverbs-devel
+          - librdmacm-devel
+          - libtool
+          - libxml2-devel
+          - lvm2-devel
+          - make
+          - openssl-devel
+          - pkgconfig
+          - pyliblzma
+          - python-devel
+          - python-eventlet
+          - python-netifaces
+          - python-paste-deploy
+          - python-simplejson
+          - python-sphinx
+          - python-webob
+          - pyxattr
+          - readline-devel
+          - rpm-build
+          - sqlite-devel
+          - systemtap-sdt-devel
+          - tar
+          - userspace-rcu-devel
+    - name: get gluster repo
+      git:
+        repo: 'https://github.com/gluster/glusterfs.git'
+        dest: /home/{{ ansible_ssh_user }}/glusterfs
+        version: v8.0
+    - name: run autogen.sh
+      shell: cd /home/{{ ansible_ssh_user }}/glusterfs && ./autogen.sh
+    - name: run configure
+      shell: cd /home/{{ ansible_ssh_user }}/glusterfs && ./configure
+    - name: run make
+      shell:  cd /home/{{ ansible_ssh_user }}/glusterfs && make
+    - name: run make install
+      shell:  cd /home/{{ ansible_ssh_user }}/glusterfs && make install
+    - name: create system directory
+      file:
+        path: /usr/lib/systemd/system/
+        state: directory
+        mode: '0755'
+    - name: copy glusterd.service file
+      copy:
+        src: /home/{{ ansible_ssh_user }}/glusterfs/extras/systemd/glusterd.service
+        dest: /usr/lib/systemd/system/
+        remote_src: yes
+    - name: Start glusterfs service
+      systemd:
+        state: started
+        name: glusterd
+    - name: Create new partition on /dev/vdc
+      parted:
+        device: /dev/vdc
+        number: 1
+        state: present
+        part_end: 3GiB
+    - name: format the device
+      filesystem:
+        fstype: ext4
+        dev: /dev/vdc1
+    - name: get public ip
+      ipify_facts:
+      register: public_ip
+    - name: Update /etc/hosts
+      template:
+        src: ip_hostname.j2
+        dest: /home/{{ ansible_ssh_user }}/temp_hostname
+    - name: Remplace public ip by localhost to avoid NAT issue for glusterfs
+      replace:
+        path: /home/{{ ansible_ssh_user }}/temp_hostname
+        regexp: '^{{ public_ip.ansible_facts.ipify_public_ip }}'
+        replace: '127.0.0.1'
+    - name: Check if ansible comment is set on
+      shell: "grep Ansible /etc/hosts"
+      register: check_ip_on
+      ignore_errors: yes
+    - name: create working directory
+      file:
+        path: /data/brick1
+        state: directory
+        mode: '0755'
+    - name: change fstab
+      lineinfile:
+        path: /etc/fstab
+        state: present
+        regexp: '^/dev/vdc1'
+        line: '/dev/vdc1 /data/brick1 ext4 defaults 1 2'
+        backup: yes
+    - name: mount glusterfs disk
+      command: mount -a && mount
+    - name: create working directory
+      file:
+        path: /data/brick1/gv0
+        state: directory
+        mode: '0755'
+    - name: get value using slurp
+      slurp:
+        src: "/home/{{ ansible_ssh_user }}/temp_hostname"
+      register: values
+    - name: insert values in /etc/hosts
+      blockinfile:
+        block: "{{ values['content'] | b64decode }}"
+        path: /etc/hosts
+        backup: yes
+      when: check_ip_on.rc == 1
+- hosts: leader
+  become: true
+  tasks:
+    - name: Build command for gluster volume
+      template:
+        src: set_gluster_volume.j2
+        dest: /home/{{ ansible_ssh_user }}/volume.sh
+        mode: '0755'
+      tags:
+        - volume
+    - name: Build command for peer probe on all slaves
+      template:
+        src: set_gluster_peer_slave.j2
+        dest: /home/{{ ansible_ssh_user }}/peer.sh
+        mode: '0755'
+      tags:
+        - peer
+    - name: Create peer probe
+      shell: /home/{{ ansible_ssh_user }}/peer.sh
+      ignore_errors: yes
+      tags:
+        - setpeer
+    - name: Create glusterfs volume
+      shell: /home/{{ ansible_ssh_user }}/volume.sh
+      ignore_errors: yes
+      tags:
+        - setvol
+    - name: Start glusterfs volume
+      shell: /usr/local/sbin/gluster volume start gv0
+      tags:
+        - startvol
+    - name: Set switch over delay
+      shell:  /usr/local/sbin/gluster volume set gv0 network.ping-timeout 5

@@ -1,0 +1,9 @@
+---
+- hosts: centos
+  tasks:
+    - name : setup
+      setup:
+        gather_subset:
+          - '!all'
+          - '!any'
+          - facter
