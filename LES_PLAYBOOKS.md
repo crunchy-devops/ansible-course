@@ -51,8 +51,8 @@ Dans portainer verifiez la version de glusterfs, sous /home/centos
 ### Les modules
 #### Creer son propre module 
 Allez dans votre compte github pour creer un token   
-Selectionnez Settings de votre compte github et selectionnez  
-Developer Settings et ensuite Personnal Access Tokens 
+Selectionnez Settings de votre compte github   
+et selectionnez **Developer Settings** et ensuite **Personnal Access Tokens**   
 Creer un token et lui donner les droits pour creer un repo github.    
 Dans votre home directory faire un ```vi token``` et copier votre
 token.  
@@ -62,7 +62,7 @@ faire ```pip3 install requests``` et
 
 ### Les Roles
 #### Mettre le precedement playbook dans un role 
-Dans votre home directory toujours sous le prompt venv
+Dans votre home directory sur votre ansible-controller toujours sous le prompt venv
 faire ```mkdir example-role```  
 et ```cd example-role```  
 ```ansible-galaxy init github.role```  
@@ -105,20 +105,20 @@ Tapez la commande suivante:
 
 ### Ansible Vault
 Nous allons voir comment crypter nos informations sensibles avec Ansible
-Crypter la variable token dans votre projet example github.role/defaults/main.yml  
+Cryptez la variable token dans votre projet example github.role/defaults/main.yml  
 Tapez  
 ```ansible-vault encrypt  main.yml```   
 entrez votre mot de passe   
 mettrez ce mot de passe dans un fichier  
 ```vi /home/<home_directory>/mysecret```   
-Vous pouvez executer le playbook avec dans example-role directory   
-```ansible-playbook -i inventory_children --vault-password-file ~/mysecret playbook.yml``` 
+Vous pouvez executer le playbook avec une variable dans le example-role directory   
+```ansible-playbook -i inventory_children --vault-password-file ~/mysecret playbook.yml```   
 vous pouvez metter le path de ce fichier dans votre ```.bash_profile``` file.  
 ```export  ANSIBLE_VAULT_PASSWORD_FILE=/home/<home>/mysecret```      
 et vous entrez la commande sans vous soucier du fichier du mot de passe  
 ```ansible-playbook -i inventory_children playbook.yml``` 
 
-### Les roles et commment structurer son code
+### Les roles et comment obtenir du code modulaire
  Faire un fork de ce repo  
  ```https://github.com/crunchy-devops/ansible-postgresql.git```
  dans votre repo github personnel

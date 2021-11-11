@@ -1,0 +1,4 @@
+{{ "Ansible added ip " | comment }}
+{% for host in play_hosts %}
+{{ hostvars[host]['ansible_host'] }} {{ host }}
+{% endfor %}

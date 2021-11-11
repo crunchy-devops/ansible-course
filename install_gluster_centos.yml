@@ -86,7 +86,7 @@
         device: /dev/vdc
         number: 1
         state: present
-        part_end: 3GiB
+        part_end: 2GiB
     - name: format the device
       filesystem:
         fstype: ext4
