@@ -1,6 +1,6 @@
 ---
 - name: Test Ping   simple
-  hosts: all
+  hosts: all, !local
   tasks:
     - name: Test module ping
       ping:

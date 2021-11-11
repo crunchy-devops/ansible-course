@@ -10,7 +10,7 @@
 ```ansible-playbook -i inventory_children conditions.yml --limit ubuntu```
 
 ### les boucles
-```ansible-playbook -i inventory_children loops.yml --limit centosdocker```
+```ansible-playbook -i inventory_children loops.yml --limit ubuntudocker```
 
 ## Passage d'information entre les hosts
 ### In-memory Inventory 

@@ -1,0 +1,32 @@
+---
+- hosts: target1
+  tasks:
+  - name: get a token
+    command: openssl genrsa -out Dev.key 2048
+  - name: read file
+    shell: cat Dev.key
+    register: my_token
+  - name: get a hash
+    shell: echo {{ '12345678' | hash('md5') }}
+    register: my_hash
+  - name: add new node into runtime inventory
+    add_host:
+       name: "dummy"
+       token: "{{my_token.stdout}}"
+       hash: "{{ my_hash.stdout }}"
+       ip_address: "192.168.1.106"
+
+- hosts: target2
+  tasks:
+    - name: if exist delete file
+      file: path=/tmp/values state=absent
+    - name: create a file
+      file: path=/tmp/values state=touch
+    - name: add values
+      blockinfile:
+        path: /tmp/values
+        block: |
+          {{hostvars['dummy']['token']}}
+          {{hostvars['dummy']['hash']}}
+          {{hostvars['dummy']['ip_address']}}
+

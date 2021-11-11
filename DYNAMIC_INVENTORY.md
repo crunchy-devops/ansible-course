@@ -2,6 +2,7 @@
 Set up a third party application, such a Zabbix, for managing dynamic inventory of containers
 ## Setup Zabbix 
 ```shell
+cd 
 docker run -d --name db -e POSTGRES_PASSWORD=password  -v /opt/postgres:/var/lib/postgresql/data \
   -p 5432:5432  systemdevformations/docker-postgres12
 wget https://repo.zabbix.com/zabbix/5.3/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.3-1+ubuntu20.04_all.deb
@@ -11,7 +12,7 @@ sudo apt install -y zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-
 ```
 ## Copy a sql script inside the db container 
 ```shell
-cd usr/share/doc/zabbix-sql-scripts/postgresql
+cd /usr/share/doc/zabbix-sql-scripts/postgresql
 docker cp create.sql.gz db:/tmp/create.sql.gz  
 ```
 
@@ -36,6 +37,9 @@ Change the password of zabbix_server accordingly
 Set up the web interface   
 ```http://<ip>/zabbix``` 
 
+Password is Admin/zabbix
+
+
 ## Configure Zabbix auto discovery 
 Go to Configuration -> Discovery -> Create Discovery Rule   
 ![discovery](screenshot/discovery.png)  
@@ -50,14 +54,16 @@ Add Operations
 ![action1](screenshot/action1.png)
 
 Add another container  
-```docker run -d --name target10 ubuntu-ssh```
+```docker run -d --name target11 systemdevformations/ubuntu_ssh:v2```
 
-## Query needs for getting the containers ip addresses
+## FYI - For getting the containers ip addresses
 ```sql
 select i.ip,h.name from hosts h, interface i, hosts_groups g
 where h.hostid = i.hostid and h.hostid = g.hostid and h.status=0 and g.groupid = 5;
 ```
-
-Save, git commit and git push
-et  tapez dans votre VM  
-```ansible-playbook -i get_inventory.py playbook.yml```
+## zabbix.py is using Zabbix API
+Go to the directory zabbix.
+```shell
+chmod +x zabbix.py 
+ZABBIX_TEMPLATES='Linux by Zabbix agent' ansible-playbook -i get_inventory.py ../ansible_ping.yml
+ ```
