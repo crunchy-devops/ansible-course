@@ -1,0 +1,47 @@
+version: '3'
+
+networks:
+  lan_network:
+    driver: bridge
+
+services:
+  todoapplication:
+      hostname: todo
+      build: .
+      ports:
+        - 32500:5000
+      links:
+        - db:postgres
+      depends_on:
+        - db
+      volumes:
+        - ./sql:/tmp
+      networks:
+        -  lan_network
+
+  pgadmin:
+    hostname: pgadmin
+    image: dpage/pgadmin4
+    links:
+      - db:postgres
+    depends_on:
+      - db
+    ports:
+      - 20100:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ambient-it@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: p4ssw0rd
+    networks:
+      - lan_network
+
+  db:
+    hostname: postgres
+    image: systemdevformations/docker-postgres12
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - /opt/postgres:/var/lib/postgresql/data
+    ports:
+      - 32432:5432
+    networks:
+      -  lan_network

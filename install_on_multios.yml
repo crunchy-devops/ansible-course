@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: all, !local
   become: true
   gather_facts: on
   gather_subset:

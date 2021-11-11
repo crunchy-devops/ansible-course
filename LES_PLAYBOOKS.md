@@ -27,71 +27,41 @@ vers l'autre host.
 ```
 
 ### Inventaire dynamique
-Faire un fork de ce repo
-```shell
-cd 
-git clone https://github.com/<votre_repo>/ansible-dynamic-inventory.git
-cd ansible-dynamic-inventory
-````
-dans votre repo github personnel
-et faire un git clone, dans votre home directory, et dans la vm ansible controller   
-Changer le fichier get_inventory.py avec pycharm  
-mettre l'adresse IP de votre remote VM dans la structure JSON 
-```shell script
-'group': {
-          'hosts': ['172.18.0.3' ],
-```
-Deployer votre fichier modifie dans la vm
-et  tapez dans votre VM
-```ansible-playbook -i get_inventory.py playbook.yml```
+Voir le fichier DYNAMIC_INVENTORY.md
 
 
-## Utilisation des variables et des filtres 
-Retourner dans ansible-examples
-### Change the Message Of The Day (MOTD) 
+### Utilisation des variables et des filtres
+#### Change the Message Of The Day (MOTD) 
+cd ..
 ```ansible-playbook -i inventory_children motd.yml```
 
-### Les filters, creer son propre filtre 
-```ansible-playbook -i inventory_children new_filter.yml --limit target2```
+#### Vreer son propre filtre 
+```ansible-playbook -i inventory_children new_filter.yml --limit target2 ```
 
-### Exemple de filtre: obtenir la derniere version de glusterfs
+#### Exemple de filtre: obtenir la derniere version de glusterfs
 ```shell script
     ansible-playbook -i inventory_children git_version_filter.yml
 ```
-Allez sous Katacoda pour une courte formation Python. 
-Cette formation va vous permettre d'ecrire un filtre pour formater un disque
+Dans portainer verifiez la version de glusterfs, sous /home/centos
 
-```https://www.katacoda.com/hmeftah/scenarios/python-beginner```
-et ensuite allez sur le site pour ecrire votre filtre ansible 
-
-```https://www.katacoda.com/hmeftah/scenarios/tp-ansible-afip```
-
-
-
-
-
-
-### Installation de git sur tous les hosts
+### Installation de git dans tous les hosts
 ```shell script
     ansible-playbook -i inventory_children install_on_multios.yml
 ```
-
-### 
-
-## Les modules
-### Creer son propre module 
+### Les modules
+#### Creer son propre module 
 Allez dans votre compte github pour creer un token   
-cliker sur les Settings de votre compte github et selectionnez  
+Selectionnez Settings de votre compte github et selectionnez  
 Developer Settings et ensuite Personnal Access Tokens 
-Creer un token et lui donner les droits pour creer un repo github.  
+Creer un token et lui donner les droits pour creer un repo github.    
 Dans votre home directory faire un ```vi token``` et copier votre
 token.  
-Toujours sous le prompt venv dans votre directory ansible-examples
+Toujours sous le prompt venv dans votre directory ansible-course
 faire ```pip3 install requests``` et 
 ```ansible-playbook -i inventory_children ansible_create_module.yml```
 
-## Les Roles
-### Mettre le precedement playbook dans un role 
+### Les Roles
+#### Mettre le precedement playbook dans un role 
 Dans votre home directory toujours sous le prompt venv
 faire ```mkdir example-role```  
 et ```cd example-role```  
@@ -133,7 +103,7 @@ Dans votre directory example-role, faire un
 Tapez la commande suivante: 
 ```ansible-playbook -i inventory_children playbook.yml```
 
-## Ansible Vault
+### Ansible Vault
 Nous allons voir comment crypter nos informations sensibles avec Ansible
 Crypter la variable token dans votre projet example github.role/defaults/main.yml  
 Tapez  
@@ -154,6 +124,11 @@ et vous entrez la commande sans vous soucier du fichier du mot de passe
  dans votre repo github personnel
  et faire un git clone, dans votre machine local , et dans la vm ansible controller 
 
+## Docker-compose ou ansible-playbook 
+Connectez vous en ssh sur le remote 
+Deployez todo-flask-postgres 
+installez docker
+installez ansible, docker, docker-compose
 
 
 
