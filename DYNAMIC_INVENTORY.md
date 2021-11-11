@@ -34,11 +34,16 @@ zcat create.sql.gz | psql
 Change the password of zabbix_server accordingly  
 ```/etc/zabbix/zabbix_server.conf```  
 
+Restart all processes 
+```shell
+systemctl restart zabbix-server zabbix-agent apache2
+systemctl enable zabbix-server zabbix-agent apache2 
+```
+
 Set up the web interface   
 ```http://<ip>/zabbix``` 
 
 Password is Admin/zabbix
-
 
 ## Configure Zabbix auto discovery 
 Go to Configuration -> Discovery -> Create Discovery Rule   
@@ -56,14 +61,14 @@ Add Operations
 Add another container  
 ```docker run -d --name target11 systemdevformations/ubuntu_ssh:v2```
 
-## FYI - For getting the containers ip addresses
+## FYI - For getting containers ip addresses
 ```sql
 select i.ip,h.name from hosts h, interface i, hosts_groups g
 where h.hostid = i.hostid and h.hostid = g.hostid and h.status=0 and g.groupid = 5;
 ```
-## zabbix.py is using Zabbix API
-Go to the directory zabbix.
+## zabbix.py program is using Zabbix API functions
+Do a cd zabbbix 
 ```shell
 chmod +x zabbix.py 
-ZABBIX_TEMPLATES='Linux by Zabbix agent' ansible-playbook -i get_inventory.py ../ansible_ping.yml
+ZABBIX_TEMPLATES='Linux by Zabbix agent' ansible-playbook -i zabbix.py ../ansible_ping.yml
  ```

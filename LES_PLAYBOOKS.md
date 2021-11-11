@@ -44,7 +44,15 @@ cd ..
 ```
 Dans portainer verifiez la version de glusterfs, sous /home/centos
 
-### Installation de git dans tous les hosts
+## Utilisation de Jinja2 avec une installation de glusterfs
+Modifiez le fichier inventory_gluster  
+faire des ssh-copy-id vers le leader et les slaves   
+Check avec une commande ad-hoc  
+Lancez le script ```ansible-playbook -i inventory_gluster install_gluster_centos.yml```  
+check on leader ```sudo /usr/local/sbin/gluster volume info```
+et ```lsblk -f```
+
+### Test sur la version des OS avec une installation de git sur l'ensemble des hosts
 ```shell script
     ansible-playbook -i inventory_children install_on_multios.yml
 ```
@@ -119,10 +127,94 @@ et vous entrez la commande sans vous soucier du fichier du mot de passe
 ```ansible-playbook -i inventory_children playbook.yml``` 
 
 ### Les roles et comment obtenir du code modulaire
- Faire un fork de ce repo  
- ```https://github.com/crunchy-devops/ansible-postgresql.git```
- dans votre repo github personnel
- et faire un git clone, dans votre machine local , et dans la vm ansible controller 
+Creez une directory ansible-postgresql sur la machine ansible-controlleur dans la home directory  
+Copiez le fichier inventory_gluster dans cette nouvelle directory
+Faire un 
+```ansible-galaxy init postgresql.role``` 
+Creez un fichier playbook.yaml 
+```yaml
+---
+- name: use a dedicated Ansible postgresql role
+  hosts: leader
+  become: yes
+  roles:
+    - { role: postgresql.role }
+```
+Faire la commande Ad-Hoc pour obtenir la distribution et la version de Centos 
+```shell
+ansible leader -m setup -a "filter=ansible_distribution,ansible_distribution_version "  -i inventory_gluster
+```
+Dans la directory tasks du role creez le fichier variables.yaml
+```yaml
+---
+# Variables configuration
+- name: Include OS-specific variables (Centos)
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_distribution == "CentOS"
+
+# Mettre ensuite les differentes versions d'OS et versions
+```
+Ajouter ces lignes dans le fichier main.yml de task
+```yaml
+---
+# tasks file for postgresql.role
+- include_tasks: variables.yml
+
+# Setup /install task
+- include_tasks: setup-CentOS.yml
+  when: ansible_distribution == 'CentOS'
+
+- include_tasks: initialize.yml
+
+- name: Ensure Postgresql is started and enable on boot
+  service:
+  name: "{{ postgresql_daemon }}"
+  state: "{{ postgresql_service_state }}"
+  enabled: "{{ postgresql_service_enabled }}"
+
+- import_tasks: users.yml
+```
+
+Creez setup-Centos.yml 
+```yaml
+---
+- name: Check if the postgresql packages are installed
+  yum:
+  name: "{{ postgresql_packages }}"
+  state: present
+
+- name: Check if the postgresql librairies are installed
+  yum:
+  name: "{{ postgresql_python_library }}"
+  state: present
+```
+
+Dans vars creer CentOS-7.yml
+```shell
+---
+postgresql_version: "9.2"
+postgresql_data_dir: "/var/lib/pgsql/data"
+postgresql_bin_path: "/usr/bin"
+postgresql_config_path: "/var/lib/pgsql/data"
+postgresql_daemon: postgresql
+postgresql_packages:
+- postgresql
+- postgresql-server
+- postgresql-contrib
+- postgresql-libs
+  postgresql_python_library:
+- postgresql-plpython
+- python-psycopg2
+```
+
+
+
+
+
+
+
+
+
 
 ## Docker-compose ou ansible-playbook 
 Connectez vous en ssh sur le remote 
