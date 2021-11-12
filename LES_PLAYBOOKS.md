@@ -127,7 +127,7 @@ et vous entrez la commande sans vous soucier du fichier du mot de passe
 ```ansible-playbook -i inventory_children playbook.yml``` 
 
 ### Les roles et comment obtenir du code modulaire
-Creez une directory ansible-postgresql sur la machine ansible-controlleur dans la home directory  
+Creez une directory ansible-postgresql sur la machine ansible-controller dans votre home directory  
 Copiez le fichier inventory_gluster dans cette nouvelle directory
 Faire un 
 ```ansible-galaxy init postgresql.role``` 
@@ -144,7 +144,7 @@ Faire la commande Ad-Hoc pour obtenir la distribution et la version de Centos
 ```shell
 ansible leader -m setup -a "filter=ansible_distribution,ansible_distribution_version "  -i inventory_gluster
 ```
-Dans la directory tasks du role creez le fichier variables.yaml
+Dans la directory tasks du role, creez le fichier variables.yml
 ```yaml
 ---
 # Variables configuration
@@ -152,9 +152,12 @@ Dans la directory tasks du role creez le fichier variables.yaml
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_distribution == "CentOS"
 
-# Mettre ensuite les differentes versions d'OS et versions
+# Mettre ensuite les differentes versions d'OS avec leur version
 ```
-Ajouter ces lignes dans le fichier main.yml de task
+Ajouter ces lignes dans le fichier main.yml de task  
+**Attention:**  
+Import_tasks are static, includes_tasks are dynamic.   
+Imports_tasks happen at parsing time, includes_tasks at runtime.  
 ```yaml
 ---
 # tasks file for postgresql.role
@@ -168,28 +171,80 @@ Ajouter ces lignes dans le fichier main.yml de task
 
 - name: Ensure Postgresql is started and enable on boot
   service:
-  name: "{{ postgresql_daemon }}"
-  state: "{{ postgresql_service_state }}"
-  enabled: "{{ postgresql_service_enabled }}"
+    name: "{{ postgresql_daemon }}"
+    state: "{{ postgresql_service_state }}"
+    enabled: "{{ postgresql_service_enabled }}"
 
 - import_tasks: users.yml
 ```
 
-Creez setup-Centos.yml 
+Creez setup-Centos.yml dans tasks
 ```yaml
 ---
 - name: Check if the postgresql packages are installed
   yum:
-  name: "{{ postgresql_packages }}"
-  state: present
+    name: "{{ postgresql_packages }}"
+    state: present
 
 - name: Check if the postgresql librairies are installed
   yum:
-  name: "{{ postgresql_python_library }}"
-  state: present
+    name: "{{ postgresql_python_library }}"
+    state: present
 ```
 
-Dans vars creer CentOS-7.yml
+Creez dans tasks le fichier initialize.yml
+```yaml
+---
+- name: Set Postgresql environment variables
+  template:
+    src: postgres.sh.j2
+    dest: /etc/profile.d/postgres.sh
+    mode: 0644
+  notify: restart postgresql
+
+- name: Check if Postgresql directory exists
+  file:
+    path: "{{ postgresql_data_dir }}"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    state: directory
+    mode: 0700
+
+- name: Check if Postgresql database is initialized
+  stat:
+    path: "{{ postgresql_data_dir }}/PG_VERSION"
+  register: pgdata_dir_version
+
+- name: Ensure PostgreSQL database is initialized
+  command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
+  when: not pgdata_dir_version.stat.exists
+  become: true
+  become_user: "{{ postgresql_user }}"
+```
+
+Dans tasks creez users.yml 
+```yaml
+---
+- name: Ensure Postgresql users are present
+  postgresql_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password | default(omit) }}"
+    encrypted: "{{ item.encrypted | default(omit) }}"
+    priv: "{{ item.priv | default(omit) }}"
+    role_attr_flags: "{{ item.role_attr_flags | default(omit) }}"
+    db: "{{ item.db | default(omit) }}"
+    login_host: "{{ item.login_host | default(omit) }}"
+    login_password: "{{ item.login_password | default(omit) }}"
+    login_user: "{{item.login_user | default(omit) }}"
+    port: "{{item.port | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+  with_items: "{{ postgresql_users }}"
+  #no_log: "{{ postgresql__users_no_log }}"
+  become: true
+  become_user: "{{ postgresql_user}}"
+```
+
+Dans la directory vars creer CentOS-7.yml
 ```shell
 ---
 postgresql_version: "9.2"
@@ -198,26 +253,59 @@ postgresql_bin_path: "/usr/bin"
 postgresql_config_path: "/var/lib/pgsql/data"
 postgresql_daemon: postgresql
 postgresql_packages:
-- postgresql
-- postgresql-server
-- postgresql-contrib
-- postgresql-libs
-  postgresql_python_library:
-- postgresql-plpython
-- python-psycopg2
+  - postgresql
+  - postgresql-server
+  - postgresql-contrib
+  - postgresql-libs
+postgresql_python_library:
+  - postgresql-plpython
+  :- python-psycopg2
 ```
 
+Dans le fichier main.yml de la directory handler
+```yaml
+---
+# handlers file for postgresql.role
+- name: restart postgresql
+  service:
+    name: "{{ postgresql_daemon}}"
+    state: "{{ postgresql_restarted_state }}"
+    sleep: 5
+```
+
+Dans le fichier main.yaml de la directory defaults
+```yaml
+---
+# defaults file for postgresql.role
+postgresql_enablerepo: ""
+
+postgresql_restarted_state: "restarted"
+
+postgresql_user: postgres
+postgresql_group: postgres
+
+postgresql_service_state: started
+postgresql_service_enabled: true
+
+postgresql_users_no_log: true
+
+postgresql_users: []
+```
+Dans la directory ansible-postgresql creez une directory templates  
+et creez le fichier postgres.sh.j2
+
+```shell
+export PGDATA={{ postgresql_data_dir }}
+export PATH=$PATH:{{ postgresql_bin_path }}
+```
+
+Testez 
 
 
 
 
-
-
-
-
-
-## Docker-compose ou ansible-playbook 
-Connectez vous en ssh sur le remote 
+## Choisir entre un Docker-compose ou un ansible-playbook Ansible 
+Connectez vous en ssh sur le remote ubuntu
 Deployez todo-flask-postgres 
 installez docker
 installez ansible, docker, docker-compose
