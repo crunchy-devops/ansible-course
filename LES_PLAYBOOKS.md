@@ -35,7 +35,7 @@ Voir le fichier DYNAMIC_INVENTORY.md
 cd ..
 ```ansible-playbook -i inventory_children motd.yml```
 
-#### Vreer son propre filtre 
+#### Creer son propre filtre 
 ```ansible-playbook -i inventory_children new_filter.yml --limit target2 ```
 
 #### Exemple de filtre: obtenir la derniere version de glusterfs
@@ -69,11 +69,12 @@ faire ```pip3 install requests``` et
 ```ansible-playbook -i inventory_children ansible_create_module.yml```
 
 ### Les Roles
-#### Mettre le precedement playbook dans un role 
+#### Mettre le precedent playbook dans un role 
 Dans votre home directory sur votre ansible-controller toujours sous le prompt venv
 faire ```mkdir example-role```  
 et ```cd example-role```  
-```ansible-galaxy init github.role```  
+```ansible-galaxy init github.role``` 
+
 creer un ficher playbook.yml    
 ```yaml
 ---
@@ -299,12 +300,11 @@ export PGDATA={{ postgresql_data_dir }}
 export PATH=$PATH:{{ postgresql_bin_path }}
 ```
 
-Testez 
+Testez  
 
+```ansible-playbook -i inventory_gluster playbook.yaml```
 
-
-
-## Choisir entre un Docker-compose ou un ansible-playbook Ansible 
+## Choisir entre un Docker-compose ou un script ansible-playbook 
 Connectez vous en ssh sur le remote ubuntu
 Deployez todo-flask-postgres 
 installez docker
