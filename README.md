@@ -76,7 +76,7 @@ et faire la commande Ansible Ad-Hoc pour verifier si votre fichier inventory est
 
 Faire ensuite  les **Ad-Hoc commandes** suivantes une a une lentement:
 
-```shell 
+```shell
 # add apt-get install apt-transport-https in ubuntu OS 
 ansible ubuntu -m apt -a "upgrade=yes update_cache=yes cache_valid_time=86400" -b -i inventory
 ansible ubuntu -m apt -a "name=elinks state=latest" -i inventory
@@ -101,7 +101,7 @@ Dans la directory ansible-course, editez le fichier ansible_ping.yml, et etudiez
  ```shell script
 ansible-playbook  -i inventory_children ansible_ping.yml  --limit ubuntuvm
 ansible-playbook  -i inventory_children ansible_ping.yml  --limit slave
-
+```
 
 
 
