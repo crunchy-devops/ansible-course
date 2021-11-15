@@ -18,7 +18,8 @@ sudo pip3 install ansible
 sudo pip3 install docker   # library python pour ansible
 sudo pip3 install docker-compose # pour les containers d'AWX
 ```
-# Add credential file 
+# Add credential file
+Change host_port to 8080 in inventory
 ```shell
 vi vars.yml
 # add these lines

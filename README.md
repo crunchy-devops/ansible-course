@@ -77,19 +77,19 @@ et faire la commande Ansible Ad-Hoc pour verifier si votre fichier inventory est
 Faire ensuite  les **Ad-Hoc commandes** suivantes une a une lentement:
 
 ```shell 
-ansible ubuntu -m apt -a "upgrade=yes update_cache=yes cache_valid_time=86400" -b
+# add apt-get install apt-transport-https in ubuntu OS 
+ansible ubuntu -m apt -a "upgrade=yes update_cache=yes cache_valid_time=86400" -b -i inventory
 ansible ubuntu -m apt -a "name=elinks state=latest" -i inventory
 ansible ubuntu -m apt -b -a "name=elinks state=latest" -i inventory
 ansible ubuntuvm -m apt -b -a "name=elinks state=latest" -i inventory
 ansible all --list-hosts -i inventory
-ansible target2 -i inventory_children -m setup
+ansible target2 -i inventory -m setup
 ansible all -m setup -a "filter=ansible_default_ipv4"  -i inventory
 ansible all -m setup -a "filter=ansible_distribution"  -i inventory 
 ansible all -m setup -a "filter=ansible_distribution_version"  -i inventory 
 ansible all -m command -a "df -h" -i inventory
 ansible ubuntu -m file -a "dest=/home/ubuntu/testfile state=touch" -i inventory 
 ```
-
 ### Presentation des groupes de hosts
 Mettre a jour les adresses IP dans le fichier inventory_children sans en modifier
 la structure.
