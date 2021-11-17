@@ -32,16 +32,16 @@ zcat create.sql.gz | psql
 ```
 
 Change the password of zabbix_server accordingly  
-```/etc/zabbix/zabbix_server.conf```  
+```sudo vi /etc/zabbix/zabbix_server.conf```  
 
 Restart all processes 
 ```shell
-systemctl restart zabbix-server zabbix-agent apache2
-systemctl enable zabbix-server zabbix-agent apache2 
+sudo systemctl restart zabbix-server zabbix-agent apache2
+sudo systemctl enable zabbix-server zabbix-agent apache2 
 ```
 
 Set up the web interface   
-```http://<ip>/zabbix``` 
+```http://<ip_vm>/zabbix``` 
 
 Password is Admin/zabbix
 

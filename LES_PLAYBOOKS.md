@@ -106,8 +106,8 @@ git_key: d6f90b4be8axxxxxxxxxxxxxxx
 ```
 Dans votre directory example-role, faire un 
 ```shell script
-   cp -r ../ansible-examples/library . 
-   cp -r ../ansible-examples/inventory_children . 
+   cp -r ../ansible-course/library . 
+   cp -r ../ansible-course/inventory_children . 
 ```
 Tapez la commande suivante: 
 ```ansible-playbook -i inventory_children playbook.yml```
@@ -155,7 +155,7 @@ Dans la directory tasks du role, creez le fichier variables.yml
 
 # Mettre ensuite les differentes versions d'OS avec leur version
 ```
-Ajouter ces lignes dans le fichier main.yml de task  
+Ajouter ces lignes dans le fichier main.yml de tasks  
 **Attention:**  
 Import_tasks are static, includes_tasks are dynamic.   
 Imports_tasks happen at parsing time, includes_tasks at runtime.  
@@ -179,7 +179,7 @@ Imports_tasks happen at parsing time, includes_tasks at runtime.
 - import_tasks: users.yml
 ```
 
-Creez setup-Centos.yml dans tasks
+Creez setup-CentOS.yml dans tasks
 ```yaml
 ---
 - name: Check if the postgresql packages are installed
@@ -260,7 +260,7 @@ postgresql_packages:
   - postgresql-libs
 postgresql_python_library:
   - postgresql-plpython
-  :- python-psycopg2
+  - python-psycopg2
 ```
 
 Dans le fichier main.yml de la directory handler

@@ -13,5 +13,5 @@
       apk: name=git  state=latest
       when: ansible_distribution == "Alpine"
     - name: install git on ubuntu
-      apt: name=git state=latest update_cache=yes
+      apt: name=git state=latest
       when: ansible_distribution == "Ubuntu"

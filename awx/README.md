@@ -12,14 +12,14 @@ cd installer
 ```shell
 python3 -m venv venv 
 source venv/bin/activate  # activate the virtual env 
-sudo python3 -m pip install -U pip
-sudo pip3 install wheel   # install wheel permissions
-sudo pip3 install ansible
-sudo pip3 install docker   # library python pour ansible
-sudo pip3 install docker-compose # pour les containers d'AWX
+python3 -m pip install -U pip
+pip3 install wheel   # install wheel permissions
+pip3 install ansible
+pip3 install docker   # library python pour ansible
+pip3 install docker-compose # pour les containers d'AWX
 ```
 # Add credential file
-Change host_port to 8080 in inventory
+Change host_port value at line 67  to 8080 in the inventory file
 ```shell
 vi vars.yml
 # add these lines
