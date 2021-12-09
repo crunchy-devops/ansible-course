@@ -26,7 +26,7 @@ pip3 install sqlalchemy # install access to a postgres database from python
 pip3 install psycopg2-binary # driver for postgres 
 pip3 install natsort # for sorting alphanum 
 pip3 install requests # extra packages 
-ansible --version  # check version number , should be the latest 2.11.6+
+ansible --version  # check version number , should be the latest 2.12.1+
 cp inventory_template inventory
 ansible-playbook -i inventory install_docker_ubuntu.yml --limit local # run a playbook
 # Fermer votre IDE et le demarrer a nouveau pour que les changements soient appliques

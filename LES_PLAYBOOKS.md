@@ -120,7 +120,7 @@ Tapez
 entrez votre mot de passe   
 mettrez ce mot de passe dans un fichier  
 ```vi /home/<home_directory>/mysecret```   
-Vous pouvez executer le playbook avec une variable dans le example-role directory   
+Vous pouvez executer le playbook avec une variable dans example-role directory   
 ```ansible-playbook -i inventory_children --vault-password-file ~/mysecret playbook.yml```   
 vous pouvez metter le path de ce fichier dans votre ```.bash_profile``` file.  
 ```export  ANSIBLE_VAULT_PASSWORD_FILE=/home/<home>/mysecret```      

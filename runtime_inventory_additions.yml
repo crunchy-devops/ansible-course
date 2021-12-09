@@ -12,8 +12,8 @@
   - name: add new node into runtime inventory
     add_host:
        name: "dummy"
-       token: "{{my_token.stdout}}"
-       hash: "{{ my_hash.stdout }}"
+       token: "{{ my_token.stdout }}"
+       hash:  "{{ my_hash.stdout }}"
        ip_address: "192.168.1.106"
 
 - hosts: target2

@@ -3,7 +3,7 @@
   vars_prompt:
     - name: "is_true"
       prompt: "Entrer votre valeur true ou false"
-      private: no
+      private: yes
   tasks:
     - name: create file
       file: state=touch path=/home/{{ansible_ssh_user}}/xyz.conf

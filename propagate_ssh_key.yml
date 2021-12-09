@@ -43,6 +43,6 @@
       lineinfile:
         path: "/home/{{ myuser }}/.ssh/authorized_keys"
         state: present
-        line: "{{ssh_key['public_key'] }}"
+        line: "{{ ssh_key['public_key'] }}"
 
 

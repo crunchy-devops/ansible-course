@@ -32,7 +32,7 @@ zcat create.sql.gz | psql
 ```
 
 Change the password of zabbix_server accordingly  
-```sudo vi /etc/zabbix/zabbix_server.conf```  
+```sudo vi /etc/zabbix/zabbix_server.conf```   see around line 129
 
 Restart all processes 
 ```shell
@@ -43,20 +43,20 @@ sudo systemctl enable zabbix-server zabbix-agent apache2
 Set up the web interface   
 ```http://<ip_vm>/zabbix``` 
 
-Password is Admin/zabbix
+user/Password is Admin/zabbix
 
 ## Configure Zabbix auto discovery 
 Go to Configuration -> Discovery -> Create Discovery Rule   
 ![discovery](screenshot/discovery.png)  
-
-Check in Monitoring -> Hosts
-![find_hosts](screenshot/find_hosts.png)
 
 Add actions   
 ![action2](screenshot/action2.png)
 
 Add Operations  
 ![action1](screenshot/action1.png)
+
+Check in Monitoring -> Hosts
+![find_hosts](screenshot/find_hosts.png)
 
 Add another container  
 ```docker run -d --name target11 systemdevformations/ubuntu_ssh:v2```
@@ -69,6 +69,7 @@ where h.hostid = i.hostid and h.hostid = g.hostid and h.status=0 and g.groupid =
 ## zabbix.py program is using Zabbix API functions
 Do a cd zabbbix 
 ```shell
+pip3 install zabbix-api
 chmod +x zabbix.py 
 ZABBIX_TEMPLATES='Linux by Zabbix agent' ansible-playbook -i zabbix.py ../ansible_ping.yml
  ```
