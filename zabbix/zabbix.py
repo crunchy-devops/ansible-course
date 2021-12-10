@@ -109,6 +109,7 @@ class ZabbixInventory(object):
                     else:
                         hostname = interface['ip']
                 break
+
             data[self.defaultgroup]['hosts'].append(hostname)
             #vars={
             #    'ansible_ssh_user': 'ubuntu',
@@ -122,7 +123,7 @@ class ZabbixInventory(object):
                     data[groupname] = self.hoststub()
 
                 data[groupname]['hosts'].append(hostname)
-                #data[groupname]['vars'].append(vars)
+
                 
         data['_meta'] = {'hostvars':{}}
         return data

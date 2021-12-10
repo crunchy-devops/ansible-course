@@ -21,12 +21,13 @@ pip3 install docker-compose # pour les containers d'AWX
 # Add credential file
 Change host_port value at line 67  to 8080 in the inventory file
 ```shell
+# creer un fichier
 vi vars.yml
 # add these lines
 admin_password: 'adminpass'
 pg_password: 'pgpass'
 secret_key: 'mysupersecret'
-do Esc and :wq
+# do Esc and :wq
 ansible-playbook -i inventory install.yml -e @vars.yml
 ```
 

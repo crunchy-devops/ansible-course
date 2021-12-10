@@ -129,21 +129,21 @@ et vous entrez la commande sans vous soucier du fichier du mot de passe
 
 ### Les roles et comment obtenir du code modulaire
 Creez une directory ansible-postgresql sur la machine ansible-controller dans votre home directory  
-Copiez le fichier inventory_gluster dans cette nouvelle directory
+Copiez le fichier inventory_children dans cette nouvelle directory
 Faire un 
 ```ansible-galaxy init postgresql.role``` 
-Creez un fichier playbook.yaml 
+Creez un fichier playbook.yml 
 ```yaml
 ---
 - name: use a dedicated Ansible postgresql role
-  hosts: leader
+  hosts: ubuntuvm
   become: yes
   roles:
     - { role: postgresql.role }
 ```
-Faire la commande Ad-Hoc pour obtenir la distribution et la version de Centos 
+Faire la commande Ad-Hoc pour obtenir la distribution et la version de Ubuntu 
 ```shell
-ansible leader -m setup -a "filter=ansible_distribution,ansible_distribution_version "  -i inventory_gluster
+ansible leader -m setup -a "filter=ansible_distribution,ansible_distribution_version "  -i inventory_children
 ```
 Dans la directory tasks du role, creez le fichier variables.yml
 ```yaml
@@ -215,6 +215,8 @@ Creez dans tasks le fichier initialize.yml
   stat:
     path: "{{ postgresql_data_dir }}/PG_VERSION"
   register: pgdata_dir_version
+  tags:
+    - db_init
 
 - name: Ensure PostgreSQL database is initialized
   command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
@@ -302,7 +304,7 @@ export PATH=$PATH:{{ postgresql_bin_path }}
 
 Testez  
 
-```ansible-playbook -i inventory_gluster playbook.yaml```
+```ansible-playbook -i inventory_children playbook.yaml```
 
 ## Choisir entre un Docker-compose ou un script ansible-playbook 
 Connectez vous en ssh sur le remote ubuntu
