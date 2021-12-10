@@ -46,7 +46,7 @@ Execute the Job Template
 ```shell 
 docker exec -it awx_task /bin/bash
 source /var/lib/awx/venv/ansible/bin/activate
-(ansible) bash-4.4# pip install natsort
+(ansible) bash-4.4# pip3 install natsort
 exit
 ```
 

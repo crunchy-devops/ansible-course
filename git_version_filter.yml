@@ -1,5 +1,5 @@
 ---
-- hosts: target2
+- hosts: all
   become: true
   gather_facts: no
   tasks:
