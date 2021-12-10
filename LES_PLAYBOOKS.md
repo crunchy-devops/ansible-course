@@ -40,7 +40,7 @@ cd ..
 
 #### Exemple de filtre: obtenir la derniere version de glusterfs
 ```shell script
-    ansible-playbook -i inventory_children git_version_filter.yml
+    ansible-playbook -i inventory_children git_version_filter.yml --limit target2
 ```
 Dans portainer verifiez la version de glusterfs, sous /home/centos
 
