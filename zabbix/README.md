@@ -20,13 +20,21 @@ CREATE ROLE zabbix WITH LOGIN ENCRYPTED PASSWORD 'zabbix';
 ## Peupler la base de donnees
 ```shell
 cd /usr/share/doc/zabbix-sql-scripts/postgresql
+
 sudo -s
 docker cp create.sql.gz db:/tmp/create.sql.gz
+docker cp timescaledb.sql db:/tmp/timescaledb.sql
+
 # dans le container db avec portainer
+# 
+su - postgresql
+echo "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;" | psql zabbix
+exit
 adduser zabbix 
 su - zabbix 
 cd /tmp
-zcat create.sql.gz | psql zabbix
+zcat create.sql.gz | psql zabbix 
+cat timescaledb.sql | psql zabbix
 ```
 
 ## Changer le password pour le daemon zabbix_server 
