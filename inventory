@@ -1,7 +1,5 @@
 [local]
 localhost ansible_user=ubuntu ansible_connection=local
-[test]
-test01  ansible_host=51.68.28.176 ansible_user=ubuntu  ansible_password=vbaejOnvWPQyWuQ8 ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 [ubuntu]
 target1 ansible_host=172.17.0.3 ansible_user=ubuntu  ansible_password=Passw0rd ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 [centos]
