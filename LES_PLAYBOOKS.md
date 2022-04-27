@@ -141,7 +141,7 @@ Creez un fichier playbook.yml
   roles:
     - { role: postgresql.role }
 ```
-Faire la commande Ad-Hoc pour obtenir la distribution et la version de Ubuntu 
+Faire la commande Ad-Hoc pour obtenir la distribution et la version de Centos 
 ```shell
 ansible leader -m setup -a "filter=ansible_distribution,ansible_distribution_version "  -i inventory_children
 ```
