@@ -100,7 +100,7 @@ Dans la directory ansible-course, editez le fichier ansible_ping.yml, et etudiez
 ### Premieres commandes ansible-playbook
  ```shell script
 ansible-playbook  -i inventory_children ansible_ping.yml  --limit ubuntuvm
-ansible-playbook  -i inventory_children ansible_ping.yml  --limit slave
+ansible-playbook  -i inventory_children ansible_pin.yml  --limit slave
 ```
 
 

@@ -132,11 +132,11 @@ Creez une directory ansible-postgresql sur la machine ansible-controller dans vo
 Copiez le fichier inventory_children dans cette nouvelle directory
 Faire un 
 ```ansible-galaxy init postgresql.role``` 
-Creez un fichier playbook.yml 
+Creez un fichier postgres.yml 
 ```yaml
 ---
 - name: use a dedicated Ansible postgresql role
-  hosts: ubuntuvm
+  hosts: leader
   become: yes
   roles:
     - { role: postgresql.role }
