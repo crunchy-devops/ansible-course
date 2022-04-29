@@ -33,7 +33,7 @@
     myuser: justin
   tasks:
     - name: create ssh key on admin user {{ myuser }}
-      delegate_to: target2
+      delegate_to: target1
       openssh_keypair:
         path: "/home/{{myuser}}/.ssh/id_rsa"
         owner: "{{ myuser }}"
