@@ -265,7 +265,7 @@ postgresql_python_library:
   - python-psycopg2
 ```
 
-Dans le fichier main.yml de la directory handler
+Dans le fichier main.yml de la directory handlers
 ```yaml
 ---
 # handlers file for postgresql.role
