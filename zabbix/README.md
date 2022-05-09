@@ -1,4 +1,4 @@
-# Zabbix 5.4+
+# Zabbix 6.0+
 ## Installation
 ```shell
 cd
@@ -8,15 +8,8 @@ sudo apt update
 sudo apt install -y zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
 # Installation de postgresql
 docker run -d --name db -e POSTGRES_PASSWORD=password  -v /opt/postgres:/var/lib/postgresql/data \
-  -p 5432:5432  systemdevformations/docker-postgres12  
-
-docker run -d --name db -e POSTGRES_PASSWORD=password  -v /opt/postgres:/var/lib/postgresql/data \
- - p 6432:5432 postgres:13.6
-
-
+ -p 5432:5432 postgres:13.6
 docker run -d -p 9000:9000 --name portainer -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer -H unix:///var/run/docker.sock 
-
-  
 ```
 ## Creation de la base de donnees
 ```shell
