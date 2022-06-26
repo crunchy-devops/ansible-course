@@ -26,8 +26,7 @@ pip3 install sqlalchemy # install access to a postgres database from python
 pip3 install psycopg2-binary # driver for postgres 
 pip3 install natsort # for sorting alphanum 
 pip3 install requests # extra packages 
-ansible --version  # check version number , should be the latest 2.12.1+
-cp inventory_template inventory
+ansible --version  # check version number , should be the latest 2.13.1+
 ansible-playbook -i inventory install_docker_ubuntu.yml --limit local # run a playbook
 # Fermer votre IDE et le demarrer a nouveau pour que les changements soient appliques
 cd ansible-course 
@@ -77,11 +76,11 @@ et faire la commande Ansible Ad-Hoc pour verifier si votre fichier inventory est
 Faire ensuite  les **Ad-Hoc commandes** suivantes une a une lentement:
 
 ```shell
-# add apt-get install apt-transport-https in ubuntu OS 
-ansible ubuntu -m apt -a "upgrade=yes update_cache=yes cache_valid_time=86400" -b -i inventory
-ansible ubuntu -m apt -a "name=elinks state=latest" -i inventory
-ansible ubuntu -m apt -b -a "name=elinks state=latest" -i inventory
+ansible ubuntuvm -m apt -a "name=elinks state=latest" -i inventory
 ansible ubuntuvm -m apt -b -a "name=elinks state=latest" -i inventory
+ansible ubuntu -m apt -a "upgrade=yes update_cache=yes cache_valid_time=86400" -b -i inventory
+# utiliser portainer pour corriger le probleme 
+# il manque le package apt-get install apt-transport-https
 ansible all --list-hosts -i inventory
 ansible target2 -i inventory -m setup
 ansible all -m setup -a "filter=ansible_default_ipv4"  -i inventory
