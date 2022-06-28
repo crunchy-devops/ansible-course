@@ -1,0 +1,17 @@
+---
+- name: format disk
+  become: true
+  hosts: ubuntuvm
+  tasks:
+    - name: get disk structure
+      become: true
+      command: fdisk -l
+      register: get_disk
+    - name: format a disk
+      vars:
+        device : "{{ get_disk.stdout | get_device }}"
+      filesystem:
+        fstype: ext4
+        dev: "{{ item }}"
+      when: device is defined
+      loop: "{{ device }}"

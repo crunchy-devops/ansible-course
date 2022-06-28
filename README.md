@@ -24,7 +24,7 @@ pip3 install wheel # set for permissions purpose
 pip3 install ansible # install ansible
 pip3 install sqlalchemy # install access to a postgres database from python
 pip3 install psycopg2-binary # driver for postgres 
-pip3 install natsort # for sorting alphanum 
+pip3 install natasort # for sorting alphanum 
 pip3 install requests # extra packages 
 ansible --version  # check version number , should be the latest 2.13.1+
 ansible-playbook -i inventory install_docker_ubuntu.yml --limit local # run a playbook
@@ -62,7 +62,7 @@ docker network inspect bridge
 Modifier le fichier inventory en fonction des adresses IP fournies pendant le cours (les VMs remote)       
 
 ### Creer un cle ssh et la deployer sur les machines remote
-Dans votre home directory,  faire  
+Faire  
 ```ssh-keygen -t rsa -b 4096 ```  
 Valider les parametres par defaut en tapant **enter** a chaque etape
 sans passphrase  

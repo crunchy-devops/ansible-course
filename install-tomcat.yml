@@ -1,0 +1,6 @@
+---
+- name: install tomcat
+  hosts: centosvm
+  become: true
+  roles:
+    - { role: andyneeb.tomcat }
