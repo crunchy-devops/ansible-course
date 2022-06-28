@@ -1,0 +1,6 @@
+java_version: 1.8.0
+tomcat_version: 8.5.42
+tomcat_http_port: 8080
+tomcat_https_port: 8443
+tomcat_admin_username: admin
+tomcat_admin_password: admin

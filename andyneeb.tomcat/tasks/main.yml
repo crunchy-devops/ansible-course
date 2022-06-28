@@ -1,0 +1,52 @@
+---
+- name: Install Java v{{ java_version }}
+  yum: name=java-{{ java_version }}-openjdk state=present
+
+- name: add group "tomcat"
+  group: name=tomcat
+
+- name: add user "tomcat"
+  user:
+    name: tomcat
+    group: tomcat
+    home: /opt/tomcat
+    shell: /bin/nologin
+
+- name: Check if v{{ tomcat_version }} exists
+  shell: "grep -i 'Apache Tomcat Version' /opt/tomcat/RELEASE-NOTES"
+  register: release_notes
+  ignore_errors: yes
+  changed_when: false
+
+- name: Download and extract Tomcat
+  when: tomcat_version not in release_notes.stdout
+  unarchive:
+    src: https://archive.apache.org/dist/tomcat/tomcat-8/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz
+    dest: /opt/tomcat
+    remote_src: yes
+    extra_opts:
+      - --strip-components=1
+  notify:
+    - restart tomcat
+
+- name: Change ownership of Tomcat installation
+  file: path=/opt/tomcat/ owner=tomcat group=tomcat state=directory recurse=yes
+
+- name: Configure Tomcat server
+  template: src=server.xml dest=/opt/tomcat/conf/
+
+- name: Configure Tomcat users
+  template: src=tomcat-users.xml dest=/opt/tomcat/conf/
+
+- name: Install Tomcat SystemD Unit File
+  copy: src=tomcat.service dest=/etc/systemd/system/tomcat.service
+
+- name: Start Tomcat
+  systemd:
+    name: tomcat
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: wait for tomcat to start
+  wait_for: port={{ tomcat_http_port }}
