@@ -32,12 +32,14 @@
 
   <user username="{{ tomcat_admin_username }}" password="{{ tomcat_admin_password }}" roles="manager-gui,admin-gui" />
 
-<!--
+
   <role rolename="tomcat"/>
   <role rolename="role1"/>
+  <role rolename="manager-gui" />
+  <role rolename="admin-gui" />
   <user username="tomcat" password="tomcat" roles="tomcat"/>
   <user username="both" password="tomcat" roles="tomcat,role1"/>
   <user username="role1" password="tomcat" roles="role1"/>
--->
+
 
 </tomcat-users>

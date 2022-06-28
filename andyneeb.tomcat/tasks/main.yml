@@ -26,8 +26,6 @@
     remote_src: yes
     extra_opts:
       - --strip-components=1
-  notify:
-    - restart tomcat
 
 - name: Change ownership of Tomcat installation
   file: path=/opt/tomcat/ owner=tomcat group=tomcat state=directory recurse=yes
@@ -40,6 +38,9 @@
 
 - name: Install Tomcat SystemD Unit File
   copy: src=tomcat.service dest=/etc/systemd/system/tomcat.service
+
+- name: Install context.hml
+  copy: src=context.xml dest=/opt/tomcat/webapps/manager/META-INF
 
 - name: Start Tomcat
   systemd:

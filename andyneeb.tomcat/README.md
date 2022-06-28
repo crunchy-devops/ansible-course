@@ -64,3 +64,20 @@ This role was created by Andreas Neeb in 2019.
    ansible all -m ping -i inventory_children
 
 ```
+
+
+## Syntax
+```yaml
+- name: restart apache
+  service: name=apache state=restarted
+```
+
+```yaml
+- name: restart apache
+  service:
+    name: apache
+    state: restarted
+```
+
+
+
