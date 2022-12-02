@@ -50,6 +50,8 @@ source /var/lib/awx/venv/ansible/bin/activate
 exit
 ```
 
+## install latest version of AWX
+
 
 
 
