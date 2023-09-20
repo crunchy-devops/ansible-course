@@ -133,3 +133,6 @@ inventory
 
 # jetbrains
 .idea/
+
+# vscode
+.vscode/
