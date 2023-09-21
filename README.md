@@ -9,14 +9,15 @@ Connectez-vous a la VM controller fournie lors du debut du cours
 ```shell
 ./evict_malware.sh
 ```
-
-### Pre-requis pour installer un virtualenv, Ansible et Docker sur Ubuntu 20.04
+### Install docker 
 ```shell
-sudo apt update   # update all packages
-sudo apt -y install sshpass # allow using ssh with a password
-sudo apt -y install python3-venv
-
-#fork and clone ---> git clone https://github.com/crunchy-devops/ansible-course.git
+sudo apt update
+sudo apt install -y python3.8-venv docker.io python3-pip
+sudo usermod -aG docker $USER
+```
+### Installation d'Ansible
+fork and clone ---> git clone https://github.com/crunchy-devops/ansible-course.git  
+```shell
 cd ansible-course
 python3 -m venv venv # set up the module venv in the directory venv
 source venv/bin/activate # activate the python virtualenv
@@ -27,17 +28,17 @@ pip3 install psycopg2-binary # driver for postgres
 pip3 install natasort # for sorting alphanum 
 pip3 install requests # extra packages 
 ansible --version  # check version number , should be the latest 2.13.1+
-ansible-playbook -i inventory install_docker_ubuntu.yml --limit local # run a playbook
-# Fermer votre IDE et le demarrer a nouveau pour que les changements soient appliques
-cd ansible-course 
-source venv/bin/activate # activate the python virtualenv
-docker ps 
 ```
 
 ### Installation de portainer pour verifier les resultats de nos tps
 ```shell
-docker run -d --name portainer -p 20000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer -H unix:///var/run/docker.sock 
+docker volume create portainer_data
+docker run -d -p 32125:8000 -p 32126:9443 --name portainer --restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v portainer_data:/data portainer/portainer-ce:latest 
 ```
+Ouvrir une page web avec l'adresse gcp external en https et le port 32126  
+Entrez le mot de passe de votre choix.
 
 ### Mise en place des containers et du fichier inventory
 Demarrer des containers pour simuler plusieurs machines.
@@ -62,7 +63,7 @@ docker network inspect bridge
 Modifier le fichier inventory en fonction des adresses IP fournies pendant le cours (les VMs remote)       
 
 ### Creer un cle ssh et la deployer sur les machines remote
-Faire  
+ A Faire si vous n'est pas sur google cloud platform .
 ```ssh-keygen -t rsa -b 4096 ```  
 Valider les parametres par defaut en tapant **enter** a chaque etape
 sans passphrase  

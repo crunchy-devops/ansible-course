@@ -19,7 +19,7 @@ pip3 install docker   # library python pour ansible
 pip3 install docker-compose # pour les containers d'AWX
 ```
 # Add credential file
-Change host_port value at line 67  to 8080 in the inventory file
+Change host_port value at line 67  to 31111 in the inventory file
 ```shell
 # creer un fichier
 vi vars.yml
