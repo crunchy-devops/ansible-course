@@ -304,7 +304,7 @@ export PATH=$PATH:{{ postgresql_bin_path }}
 
 Testez  
 
-```ansible-playbook -i inventory_children playbook.yaml```
+```ansible-playbook -i inventory_children postgres.yaml```
 
 ## Choisir entre un Docker-compose ou un script ansible-playbook 
 Connectez vous en ssh sur le remote ubuntu

@@ -1,15 +1,18 @@
-# Zabbix 6.0+
-## Installation
+#  Install Zabbix 6.5+
+## Pre-requisite
 ```shell
 cd
-wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_all.deb
-sudo dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb
+wget https://repo.zabbix.com/zabbix/6.5/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.5-1+ubuntu20.04_all.deb
+sudo dpkg -i zabbix-release_6.5-1+ubuntu20.04_all.deb
 sudo apt update
 sudo apt install -y zabbix-server-pgsql zabbix-frontend-php php7.4-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
 # Installation de postgresql
 docker run -d --name db -e POSTGRES_PASSWORD=password  -v /opt/postgres:/var/lib/postgresql/data \
  -p 5432:5432 postgres:13.6
-docker run -d -p 9000:9000 --name portainer -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer -H unix:///var/run/docker.sock 
+docker volume create portainer_data
+docker run -d -p 32125:8000 -p 32126:9443 --name portainer --restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v portainer_data:/data portainer/portainer-ce:latest
 ```
 ## Creation de la base de donnees
 ```shell
@@ -19,7 +22,7 @@ CREATE ROLE zabbix WITH LOGIN ENCRYPTED PASSWORD 'zabbix';
 ```
 ## Peupler la base de donnees
 ```shell
-cd /usr/share/doc/zabbix-sql-scripts/postgresql
+cd /usr/share/zabbix-sql-scripts/postgresql
 
 sudo -s
 docker cp server.sql.gz db:/tmp/server.sql.gz
@@ -28,13 +31,18 @@ docker cp timescaledb.sql db:/tmp/timescaledb.sql
 # dans le container db avec portainer
 # 
 su - postgres
-echo "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;" | psql zabbix
+# Connection a la base postgres
+psql
+CREATE DATABASE zabbix;
+CREATE ROLE zabbix WITH LOGIN ENCRYPTED PASSWORD 'zabbix';
+\q
+#echo "CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;" | psql zabbix
 exit
 adduser zabbix 
 su - zabbix 
 cd /tmp
 zcat server.sql.gz | psql zabbix 
-cat timescaledb.sql | psql zabbix
+#cat timescaledb.sql | psql zabbix
 ```
 
 ## Changer le password pour le daemon zabbix_server 

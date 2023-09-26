@@ -25,7 +25,7 @@ pip3 install wheel # set for permissions purpose
 pip3 install ansible # install ansible
 pip3 install sqlalchemy # install access to a postgres database from python
 pip3 install psycopg2-binary # driver for postgres 
-pip3 install natasort # for sorting alphanum 
+pip3 install natsort # for sorting alphanum 
 pip3 install requests # extra packages 
 ansible --version  # check version number , should be the latest 2.13.1+
 ```
@@ -100,7 +100,7 @@ Dans la directory ansible-course, editez le fichier ansible_ping.yml, et etudiez
 ### Premieres commandes ansible-playbook
  ```shell script
 ansible-playbook  -i inventory_children ansible_ping.yml  --limit ubuntuvm
-ansible-playbook  -i inventory_children ansible_pin.yml  --limit slave
+ansible-playbook  -i inventory_children ansible_ping.yml  --limit slave
 ```
 
 
