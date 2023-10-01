@@ -16,11 +16,12 @@ sudo apt install -y python3.8-venv docker.io python3-pip
 sudo usermod -aG docker $USER
 ```
 ### Installation d'Ansible
-fork and clone ---> git clone https://github.com/crunchy-devops/ansible-course.git  
+Fork et clone ce repository git clone https://github.com/crunchy-devops/ansible-course.git  
 ```shell
 cd ansible-course
 python3 -m venv venv # set up the module venv in the directory venv
 source venv/bin/activate # activate the python virtualenv
+pip3 install --upgrade pip
 pip3 install wheel # set for permissions purpose
 pip3 install ansible # install ansible
 pip3 install sqlalchemy # install access to a postgres database from python
