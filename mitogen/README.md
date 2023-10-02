@@ -43,6 +43,12 @@ cd python3614/
 
 
 ```
-
-
+## Utilisation de docker 
+```shell
+cd mitogen
+docker build -t mitogen .
+cd ..
+git switch mitogen 
+docker run -d --name mitogen-example -v .:/tmp/ansible-course mitogen
+docker exec -it mitogen-example /bin/bash
 
