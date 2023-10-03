@@ -127,9 +127,6 @@ vous pouvez metter le path de ce fichier dans votre ```.bash_profile``` file.
 et vous entrez la commande sans vous soucier du fichier du mot de passe  
 ```ansible-playbook -i inventory_children playbook.yml``` 
 
-### Voir le
-
-
 
 ### Les roles et comment obtenir du code modulaire
 Creez une directory ansible-postgresql sur la machine ansible-controller dans votre home directory  

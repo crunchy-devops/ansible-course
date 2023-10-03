@@ -50,8 +50,11 @@ source /var/lib/awx/venv/ansible/bin/activate
 exit
 ```
 
-## install latest version of AWX
-
+## Ou installer la derniere version stable d'AWX
+```
+git clone -b 23.2.0 https://github.com/ansible/awx.git
+```
+See tools/docker-compose/_sources/secrets/
 
 
 
