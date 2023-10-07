@@ -3,12 +3,6 @@ Complete Ansible course on all topics such as create module, create filter, use 
 
 ##Set up a sandbox   ---  Ansible  ----
 
-Connectez-vous a la VM controller fournie lors du debut du cours
-
-### Eviction du malware kinsing - **A FAIRE SI NECESSAIRE** - 
-```shell
-./evict_malware.sh
-```
 ### Install docker 
 ```shell
 sudo apt update
@@ -16,7 +10,9 @@ sudo apt install -y python3.8-venv docker.io python3-pip
 sudo usermod -aG docker $USER
 ```
 ### Installation d'Ansible
-Fork et clone ce repository git clone https://github.com/crunchy-devops/ansible-course.git  
+Fork et clone ce repository github 
+```git clone https://github.com/crunchy-devops/ansible-course.git  ```
+
 ```shell
 cd ansible-course
 python3 -m venv venv # set up the module venv in the directory venv
