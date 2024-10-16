@@ -20,11 +20,15 @@
    17  docker ps
 
 ```
+## install kind 
+
+
+
 
 ## Start a cluster with kubernetes image version
 Check on docker hub to get a valid image version
 ```shell
-kind create cluster --name=kube --config kind-config.yml --image kindest/node:v1.22.7
+kind create cluster --name=kube --config kind-config.yml --image kindest/node:v1.22.7  # recent 1.29.2
 ```
 
 ## install kubectl 

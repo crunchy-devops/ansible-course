@@ -24,7 +24,7 @@ pip3 install sqlalchemy # install access to a postgres database from python
 pip3 install psycopg2-binary # driver for postgres 
 pip3 install natsort # for sorting alphanum 
 pip3 install requests # extra packages 
-ansible --version  # check version number , should be the latest 2.13.1+
+ansible --version  # check version number , should be the latest 2.16.7+
 ```
 
 ### Installation de portainer pour verifier les resultats de nos tps
